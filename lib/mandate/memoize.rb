@@ -1,8 +1,5 @@
 module Mandate
   module Memoize
-    def self.extended(base)
-    end
-
     def memoize
       @__mandate_memoizing = true
     end

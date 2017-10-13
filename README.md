@@ -25,7 +25,13 @@ Or install it yourself as:
 class SomeService
   import Mandate
 
-  def normal_method
+  attr_reader :some_number, :some_string
+  def initialize(some_number, some_string)
+    @some_number, @some_string
+  end
+
+  def call
+    # Do something that returns the results of this command.
   end
 
   memoize
@@ -34,6 +40,8 @@ class SomeService
     "Hello, world!"
   end
 end
+
+SomeService.(10, "foobar")
 ```
 
 ## Development
