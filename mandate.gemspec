@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jez.walker@gmail.com"]
 
   spec.summary       = %q{A simple command-pattern helper gem for Ruby}
-  spec.description   = %q{}
+  spec.description   = %q{This Ruby Gem adds functionality for the command pattern in Ruby, and for memoization.}
   spec.homepage      = "https://github.com/thalamusai/mandate"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

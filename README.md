@@ -22,26 +22,30 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-class SomeService
-  import Mandate
+class Multiplies
+  include Mandate
 
-  attr_reader :some_number, :some_string
-  def initialize(some_number, some_string)
-    @some_number, @some_string
+  attr_reader :number_1, :number_2
+  def initialize(number_1, number_2)
+    @number_1 = number_1
+    @number_2 = number_2
   end
 
   def call
-    # Do something that returns the results of this command.
+    do_the_maths
   end
 
+  # Memoize any method by putting the keyword before it.
   memoize
-  def some_method_to_memoize
+  def do_the_maths
     sleep(10)
-    "Hello, world!"
+    number_1 * number_2
   end
 end
 
-SomeService.(10, "foobar")
+# This calls initializer and then call with the params
+Multiplies.(20, 3)
+# => 60
 ```
 
 ## Development
