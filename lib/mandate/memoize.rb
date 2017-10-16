@@ -9,7 +9,6 @@ module Mandate
       return unless @__mandate_memoizing
 
       memoizer = Module.new do
-        p method_name
         define_method method_name do
           @__mandate_memoized_results ||= {}
 
