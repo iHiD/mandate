@@ -13,9 +13,11 @@ module Mandate
     # reset out of memozing mode.
     def method_added(method_name)
       super
-      return unless @__mandate_memoizing
-      __mandate_memoize(method_name)
-      @__mandate_memoizing = false
+
+      if @__mandate_memoizing
+        __mandate_memoize(method_name)
+        @__mandate_memoizing = false
+      end
     end
 
     # Create an anonymous module that defines a method
