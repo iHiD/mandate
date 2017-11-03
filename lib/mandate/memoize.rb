@@ -14,7 +14,7 @@ module Mandate
     def method_added(method_name)
       super
 
-      if @__mandate_memoizing
+      if instance_variable_defined?("@__mandate_memoizing") && @__mandate_memoizing
         __mandate_memoize(method_name)
         @__mandate_memoizing = false
       end
