@@ -25,11 +25,7 @@ Or install it yourself as:
 class Multiplies
   include Mandate
 
-  attr_reader :number_1, :number_2
-  def initialize(number_1, number_2)
-    @number_1 = number_1
-    @number_2 = number_2
-  end
+  initialize_with :number_1, :number_2
 
   def call
     do_the_maths
@@ -46,6 +42,22 @@ end
 # This calls initializer and then call with the params
 Multiplies.(20, 3)
 # => 60
+```
+
+### `initialize_with`
+
+The `initialize_with` method creates an initializer and private attr_readers for the specified variables.
+
+For example `initialize_with :foo, :bar` is the equivelent of:
+
+```
+def initialize(foo, bar)
+  @foo = foo
+  @bar = bar
+end
+
+private
+attr_reader :foo, :bar
 ```
 
 ## Development
