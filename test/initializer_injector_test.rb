@@ -14,7 +14,7 @@ class InitializerInjectorTest < Minitest::Test
 
   class KeywordStorer
     include Mandate
-    initialize_with :foo, bar: ["default"]
+    initialize_with :foo, bar: "default"
   end
 
   def test_initializes_properly_without_args
@@ -41,7 +41,7 @@ class InitializerInjectorTest < Minitest::Test
     foo = "fooooo"
     storer = KeywordStorer.new(foo)
     assert_equal foo, storer.send(:foo)
-    assert_equal ["default"], storer.send(:bar)
+    assert_equal "default", storer.send(:bar)
   end
 
   def test_raises_with_wrong_amount_of_args
