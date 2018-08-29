@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{A simple command-pattern helper gem for Ruby}
   spec.description   = %q{This Ruby Gem adds functionality for the command pattern in Ruby, and for memoization.}
-  spec.homepage      = "https://github.com/thalamusai/mandate"
+  spec.homepage      = "https://github.com/iHiD/mandate"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
