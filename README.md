@@ -50,7 +50,7 @@ The `initialize_with` method creates an initializer and private attr_readers for
 
 For example `initialize_with :foo, :bar` is the equivelent of:
 
-```
+```ruby
 def initialize(foo, bar)
   @foo = foo
   @bar = bar
