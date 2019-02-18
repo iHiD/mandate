@@ -48,7 +48,7 @@ Multiplies.(20, 3)
 
 The `initialize_with` method creates an initializer and private attr_readers for the specified variables.
 
-For example `initialize_with :foo, :bar` is the equivelent of:
+For example `initialize_with :foo, :bar` is the equivalent of:
 
 ```ruby
 def initialize(foo, bar)
