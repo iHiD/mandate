@@ -60,6 +60,67 @@ private
 attr_reader :foo, :bar
 ```
 
+### Using success/failure callbacks
+
+Sometimes it is helpful for the class to return success/failure callbacks rather than just the resulting value.
+This can be achieved by including the `Mandate::Callbacks` module as follows:
+
+```ruby
+class Sumer
+  include Mandate
+  include Mandate::Callbacks
+
+  initialize_with :num1, :num2
+
+  def call
+    abort!("num1 must be an Integer") unless num1.is_a?(Integer)
+    abort!("num2 must be an Integer") unless num2.is_a?(Integer)
+
+    num1 + num2
+  end
+end
+
+cmd = Sumer.(1,2)
+cmd.success{ |result| p result }
+cmd.failure{ |errors| p errors }
+# => 3
+
+cmd = Sumer.("1","2")
+cmd.success{ |result| p result }
+cmd.failure{ |errors| p errors }
+# => ["num1 must be an Integer"]
+```
+
+Rather than using `abort!` with an error, it is also possible to add errors as you go then abort if you find any. 
+For example:
+
+```ruby
+class Sumer
+  include Mandate
+  include Mandate::Callbacks
+
+  initialize_with :num1, :num2
+
+  def call
+    add_error!("num1 must be an Integer") unless num1.is_a?(Integer)
+    add_error!("num2 must be an Integer") unless num2.is_a?(Integer)
+    abort_if_errored!
+
+    num1 + num2
+  end
+end
+
+cmd = Sumer.(1,2)
+cmd.success{ |result| p result }
+cmd.failure{ |errors| p errors }
+# => 3
+
+cmd = Sumer.("1","2")
+cmd.success{ |result| p result }
+cmd.failure{ |errors| p errors }
+# => ["num1 must be an Integer", "num2 must be an Integer"]
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
