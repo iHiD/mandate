@@ -3,6 +3,41 @@ module Mandate
     class AbortError < RuntimeError
     end
 
+    class Results
+      attr_reader :result, :errors
+
+      def initialize
+        @succeeded = false
+        @errors = []
+      end
+
+      def succeeded!(result)
+        @result = result
+        @succeeded = true
+      end
+
+      def add_error(error)
+        errors << error
+      end
+
+      def succeeded?
+        !!succeeded
+      end
+
+      def success(&block)
+        return unless succeeded?
+        block.call(result)
+      end
+
+      def failure(&block)
+        return if succeeded?
+        block.call(errors)
+      end
+
+      private
+      attr_reader :succeeded
+    end
+
     def self.included(base)
       # Override self.call to call the internal call_with_callbacks
       # function which returns a method with success/failure callbacks
@@ -23,37 +58,22 @@ module Mandate
     def self.extended(base)
       base.send(:define_method, :call_with_callbacks) do
         begin
-
-          # Setup
-          @__mandate_errors = []
-          @__mandate_success = false
+          # Create results object
+          @__mandate_results = Results.new
 
           # Run the actual command
-          @__mandate_result = call
-
-          # It's succeed so let's set this flag
-          @__mandate_success = true
-          self
-
+          # If call fails, succeeded! will never get called
+          @__mandate_results.succeeded!(call)
         rescue AbortError
-          self
         end
-      end
 
-      base.send(:define_method, :success) do |&block|
-        return unless @__mandate_success
-        block.call(@__mandate_result)
-      end
-
-      base.send(:define_method, :failure) do |&block|
-        return if @__mandate_success
-        block.call(@__mandate_errors)
+        @__mandate_results
       end
 
       private
 
       base.send(:define_method, :add_error!) do |error|
-        @__mandate_errors << error
+        @__mandate_results.add_error(error)
       end
 
       base.send(:define_method, :abort!) do |error = nil|
@@ -62,7 +82,7 @@ module Mandate
       end
 
       base.send(:define_method, :abort_if_errored!) do
-        raise AbortError if @__mandate_errors.size > 0
+        raise AbortError if @__mandate_results.errors.size > 0
       end
     end
   end
