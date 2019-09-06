@@ -81,17 +81,15 @@ class Sumer
 end
 
 cmd = Sumer.(1,2)
-cmd.success{ |result| p result }
-cmd.failure{ |errors| p errors }
-# => 3
+cmd.success { |result| p result } # puts 3
+cmd.failure { |errors| p errors } # Noop
 
 cmd = Sumer.("1","2")
-cmd.success{ |result| p result }
-cmd.failure{ |errors| p errors }
-# => ["num1 must be an Integer"]
+cmd.success { |result| p result } # Noop
+cmd.failure { |errors| p errors } # puts ["num1 must be an Integer"]
 ```
 
-Rather than using `abort!` with an error, it is also possible to add errors as you go then abort if you find any. 
+Rather than using `abort!` with an error, it is also possible to add errors as you go then abort if you find any.
 For example:
 
 ```ruby
@@ -111,14 +109,12 @@ class Sumer
 end
 
 cmd = Sumer.(1,2)
-cmd.success{ |result| p result }
-cmd.failure{ |errors| p errors }
-# => 3
+cmd.success { |result| p result } # puts 3
+cmd.failure { |errors| p errors } # Noop
 
 cmd = Sumer.("1","2")
-cmd.success{ |result| p result }
-cmd.failure{ |errors| p errors }
-# => ["num1 must be an Integer", "num2 must be an Integer"]
+cmd.success { |result| p result } # Noop
+cmd.failure { |errors| p errors } # puts ["num1 must be an Integer", "num2 must be an Integer"]
 ```
 
 ## Development
