@@ -21,7 +21,7 @@ module Mandate
     end
 
     def self.extended(base)
-      base.define_method(:call_with_callbacks) do
+      base.send(:define_method, :call_with_callbacks) do
         begin
 
           # Setup
@@ -40,28 +40,28 @@ module Mandate
         end
       end
 
-      base.define_method(:success) do |&block|
+      base.send(:define_method, :success) do |&block|
         return unless @__mandate_success
         block.call(@__mandate_result)
       end
 
-      base.define_method(:failure) do |&block|
+      base.send(:define_method, :failure) do |&block|
         return if @__mandate_success
         block.call(@__mandate_errors)
       end
 
       private
 
-      base.define_method(:add_error!) do |error|
+      base.send(:define_method, :add_error!) do |error|
         @__mandate_errors << error
       end
 
-      base.define_method(:abort!) do |error = nil|
+      base.send(:define_method, :abort!) do |error = nil|
         add_error!(error) if error
         raise AbortError
       end
 
-      base.define_method(:abort_if_errored!) do
+      base.send(:define_method, :abort_if_errored!) do
         raise AbortError if @__mandate_errors.size > 0
       end
     end
