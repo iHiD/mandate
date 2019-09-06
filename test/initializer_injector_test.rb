@@ -1,6 +1,6 @@
 require "test_helper"
 
-class InitializerTest < Minitest::Test
+class InitializerInjectorTest < Minitest::Test
 
   class BoringStorer
     include Mandate
