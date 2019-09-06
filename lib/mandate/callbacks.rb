@@ -22,20 +22,22 @@ module Mandate
 
     def self.extended(base)
       base.define_method(:call_with_callbacks) do
+        begin
 
-        # Setup
-        @__mandate_errors = []
-        @__mandate_success = false
+          # Setup
+          @__mandate_errors = []
+          @__mandate_success = false
 
-        # Run the actual command
-        @__mandate_result = call
+          # Run the actual command
+          @__mandate_result = call
 
-        # It's succeed so let's set this flag
-        @__mandate_success = true
-        self
+          # It's succeed so let's set this flag
+          @__mandate_success = true
+          self
 
-      rescue AbortError
-        self
+        rescue AbortError
+          self
+        end
       end
 
       base.define_method(:success) do |&block|
