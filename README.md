@@ -60,9 +60,9 @@ private
 attr_reader :foo, :bar
 ```
 
-### Using success/failure callbacks
+### Using on_success/on_failure callbacks
 
-Sometimes it is helpful for the class to return success/failure callbacks rather than just the resulting value.
+Sometimes it is helpful for the class to return on_success/on_failure callbacks rather than just the resulting value.
 This can be achieved by including the `Mandate::Callbacks` module as follows:
 
 ```ruby
@@ -80,44 +80,31 @@ class Sumer
   end
 end
 
-cmd = Sumer.(1,2)
-cmd.success { |result| p result } # puts 3
-cmd.failure { |errors| p errors } # Noop
-cmd.succeeded? # true
-cmd.result # 3
-cmd.errors # []
+res = Sumer.(1,2)
+res.on_success { |result| p result } # puts 3
+res.on_failure { |errors| p errors } # Noop
+res.succeeded? # true
+res.result # 3
+res.errors # []
 
-cmd = Sumer.("1","2")
-cmd.success { |result| p result } # Noop
-cmd.failure { |errors| p errors } # puts ["num1 must be an Integer"]
-cmd.succeeded? # false
-cmd.result # nil
-cmd.errors # ["num1 must be an Integer"]
+res = Sumer.("1","2")
+res.on_success { |result| p result } # Noop
+res.on_failure { |errors| p errors } # puts ["num1 must be an Integer"]
+
+res = Sumer.("1","2")
+res.on_failure { |errors| p errors } # puts ["num1 must be an Integer", "num2 must be an Integer"]
+res.errors # ["num1 must be an Integer", "num2 must be an Integer"]
 ```
 
-Rather than using `abort!` with an error, it is also possible to add errors as you go then abort if you find any.
-For example:
+It is also possible to chain methods, for example:
 
 ```ruby
-class Sumer
-  include Mandate
-  include Mandate::Callbacks
-
-  initialize_with :num1, :num2
-
-  def call
-    add_error!("num1 must be an Integer") unless num1.is_a?(Integer)
-    add_error!("num2 must be an Integer") unless num2.is_a?(Integer)
-    abort_if_errored!
-
-    num1 + num2
-  end
-end
-
-cmd = Sumer.("1","2")
-cmd.failure { |errors| p errors } # puts ["num1 must be an Integer", "num2 must be an Integer"]
-cmd.errors # ["num1 must be an Integer", "num2 must be an Integer"]
+Sumer.(1,2).
+  on_success { |result| p result }.
+  on_failure { |errors| p errors }
 ```
+
+The `succeeded?` method is also aliased as `success?`.
 
 ## Development
 

@@ -23,15 +23,16 @@ module Mandate
       def succeeded?
         !!succeeded
       end
+      alias_method :success?, :succeeded?
 
-      def success(&block)
-        return unless succeeded?
-        block.call(result)
+      def on_success(&block)
+        block.call(result) if succeeded?
+        self
       end
 
-      def failure(&block)
-        return if succeeded?
-        block.call(errors)
+      def on_failure(&block)
+        block.call(errors) unless succeeded?
+        self
       end
 
       private
@@ -40,13 +41,13 @@ module Mandate
 
     def self.included(base)
       # Override self.call to call the internal call_with_callbacks
-      # function which returns a method with success/failure callbacks
+      # function which returns a method with on_success/on_failure callbacks
       class << base
         # Remove the existing created by the "include Mandate"
         remove_method(:call)
 
         # Define a new call methods which calls the instance call
-        # method but with the added callbacks needed for success/failure
+        # method but with the added callbacks needed for on_success/on_failure
         def call(*args)
           new(*args).call_with_callbacks
         end
