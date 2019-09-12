@@ -2,6 +2,7 @@ require "mandate/version"
 require "mandate/memoize"
 require "mandate/call_injector"
 require "mandate/initializer_injector"
+require "mandate/callbacks"
 
 module Mandate
   def self.included(base)

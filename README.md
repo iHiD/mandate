@@ -60,6 +60,52 @@ private
 attr_reader :foo, :bar
 ```
 
+### Using on_success/on_failure callbacks
+
+Sometimes it is helpful for the class to return on_success/on_failure callbacks rather than just the resulting value.
+This can be achieved by including the `Mandate::Callbacks` module as follows:
+
+```ruby
+class Sumer
+  include Mandate
+  include Mandate::Callbacks
+
+  initialize_with :num1, :num2
+
+  def call
+    abort!("num1 must be an Integer") unless num1.is_a?(Integer)
+    abort!("num2 must be an Integer") unless num2.is_a?(Integer)
+
+    num1 + num2
+  end
+end
+
+res = Sumer.(1,2)
+res.on_success { |result| p result } # puts 3
+res.on_failure { |errors| p errors } # Noop
+res.succeeded? # true
+res.result # 3
+res.errors # []
+
+res = Sumer.("1","2")
+res.on_success { |result| p result } # Noop
+res.on_failure { |errors| p errors } # puts ["num1 must be an Integer"]
+
+res = Sumer.("1","2")
+res.on_failure { |errors| p errors } # puts ["num1 must be an Integer", "num2 must be an Integer"]
+res.errors # ["num1 must be an Integer", "num2 must be an Integer"]
+```
+
+It is also possible to chain methods, for example:
+
+```ruby
+Sumer.(1,2).
+  on_success { |result| p result }.
+  on_failure { |errors| p errors }
+```
+
+The `succeeded?` method is also aliased as `success?`.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
