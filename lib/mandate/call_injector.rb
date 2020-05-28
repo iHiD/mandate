@@ -7,7 +7,12 @@ module Mandate
       #   Foobar.new(some, args).call()
       class << base
         def call(*args)
-          new(*args).call
+          if args.last.is_a?(Hash) && 
+            :key == instance_method(:initialize).parameters.last&.first
+            new(*args[0..-2], **args[-1]).call
+          else
+            new(*args).call
+          end
         end
       end
     end
