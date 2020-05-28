@@ -70,4 +70,16 @@ class InitializerInjectorTest < Minitest::Test
     refute Sumer.(10, 5, false).success?
   end
 
+  def test_private_methods_are_private
+    obj = Sumer.new(10, 5, true)
+    exp = assert_raises(NoMethodError) { obj.add_error!(nil) }
+    assert exp.message.include?("private method")
+
+    exp = assert_raises(NoMethodError) { obj.abort! }
+    assert exp.message.include?("private method")
+
+    exp = assert_raises(NoMethodError) { obj.abort_if_errored! }
+    assert exp.message.include?("private method")
+  end
+
 end

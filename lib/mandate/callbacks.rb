@@ -71,20 +71,21 @@ module Mandate
         @__mandate_results
       end
 
-      private
-
       base.send(:define_method, :add_error!) do |error|
         @__mandate_results.add_error(error)
       end
+      base.send(:private, :add_error!)
 
       base.send(:define_method, :abort!) do |error = nil|
         add_error!(error) if error
         raise AbortError
       end
+      base.send(:private, :abort!)
 
       base.send(:define_method, :abort_if_errored!) do
         raise AbortError if @__mandate_results.errors.size > 0
       end
+      base.send(:private, :abort_if_errored!)
     end
   end
 end
