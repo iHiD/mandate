@@ -70,6 +70,15 @@ class CallInjectorTest < Minitest::Test
     end
   end
 
+  class WeirdPrinterInitialized
+    include Mandate
+    initialize_with :a, :b
+
+    def call
+      "#{a} #{b.keys.join} #{b.values.join}"
+    end
+  end
+
   class BadConstant
     include Mandate
 
@@ -101,6 +110,10 @@ class CallInjectorTest < Minitest::Test
 
   def test_hash_as_final_param
     assert_equal "a b c", WeirdPrinter.("a", {b: "c"})
+  end
+
+  def test_hash_with_initialize_with
+    assert_equal "a b c", WeirdPrinterInitialized.("a", {b: "c"})
   end
 
   def test_empty_intitializer
