@@ -9,8 +9,8 @@ module Mandate
 
     # Intercept a method being added.
     # Create the method as normal, then if we are in
-    # memoize mode, call out to the memozie function and
-    # reset out of memozing mode.
+    # memoize mode, call out to the memoize function and
+    # reset out of memoizing mode.
     def method_added(method_name)
       super
 
