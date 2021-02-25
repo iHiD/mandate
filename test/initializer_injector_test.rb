@@ -1,7 +1,6 @@
 require "test_helper"
 
 class InitializerInjectorTest < Minitest::Test
-
   class BoringStorer
     include Mandate
     initialize_with
@@ -62,4 +61,3 @@ class InitializerInjectorTest < Minitest::Test
     end
   end
 end
-

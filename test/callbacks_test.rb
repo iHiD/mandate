@@ -46,7 +46,7 @@ class InitializerInjectorTest < Minitest::Test
     cmd = MultipleErrors.()
     cmd.on_success { flunk } # This block should never be called
     cmd.on_failure do |errors|
-      assert_equal errors,  [
+      assert_equal errors, [
         "Something bad happened",
         "Something else bad happened"
       ]
@@ -73,13 +73,12 @@ class InitializerInjectorTest < Minitest::Test
   def test_private_methods_are_private
     obj = Sumer.new(10, 5, true)
     exp = assert_raises(NoMethodError) { obj.add_error!(nil) }
-    assert exp.message.include?("private method")
+    assert_includes exp.message, "private method"
 
     exp = assert_raises(NoMethodError) { obj.abort! }
-    assert exp.message.include?("private method")
+    assert_includes exp.message, "private method"
 
     exp = assert_raises(NoMethodError) { obj.abort_if_errored! }
-    assert exp.message.include?("private method")
+    assert_includes exp.message, "private method"
   end
-
 end

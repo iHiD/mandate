@@ -1,11 +1,11 @@
 require "test_helper"
 
 class MandateTest < Minitest::Test
-
   class MemoizeTester
     extend Mandate::Memoize
 
     attr_reader :normal_1_call_count, :memoize_call_count, :normal_2_call_count
+
     def initialize
       @normal_1_call_count = 0
       @memoize_call_count = 0
@@ -29,18 +29,15 @@ class MandateTest < Minitest::Test
   class MemoizeAccessTester
     extend Mandate::Memoize
 
-    def public_meth
-    end
+    def public_meth; end
 
     private
     memoize
-    def private_meth
-    end
+    def private_meth; end
 
     protected
     memoize
-    def protected_meth
-    end
+    def protected_meth; end
   end
 
   def test_it_memoizes_as_required
@@ -58,9 +55,8 @@ class MandateTest < Minitest::Test
 
   def test_methods_keep_access_levels
     tester = MemoizeAccessTester
-    assert tester.public_instance_methods.include?(:public_meth)
-    assert tester.private_instance_methods.include?(:private_meth)
-    assert tester.protected_instance_methods.include?(:protected_meth)
+    assert_includes tester.public_instance_methods, :public_meth
+    assert_includes tester.private_instance_methods, :private_meth
+    assert_includes tester.protected_instance_methods, :protected_meth
   end
 end
-

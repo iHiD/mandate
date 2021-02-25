@@ -48,11 +48,10 @@ module Mandate
             @__mandate_memoized_results[method_name] = super()
           end
         end
-        
+
         send(access_modifier, method_name) if access_modifier
       end
       prepend memoizer
     end
   end
 end
-
