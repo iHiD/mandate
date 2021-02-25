@@ -54,13 +54,13 @@ class InitializerInjectorTest < Minitest::Test
   end
 
   def test_chaining
-    res1 = Sumer.(10, 5, true)
-    res2 = res1.on_success { |res| assert_equal 15, res }
-    res3 = res1.on_failure { flunk }
+    res_1 = Sumer.(10, 5, true)
+    res_2 = res_1.on_success { |res| assert_equal 15, res }
+    res_3 = res_1.on_failure { flunk }
 
-    assert_equal res1, res2
-    assert_equal res1, res3
-    assert_equal res2, res3
+    assert_equal res_1, res_2
+    assert_equal res_1, res_3
+    assert_equal res_2, res_3
   end
 
   def test_succeededd_and_success

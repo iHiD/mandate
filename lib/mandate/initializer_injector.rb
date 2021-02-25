@@ -24,17 +24,17 @@ module Mandate
               end
 
               kwargs.each do |name, value|
-                if kwattrs.key?(name)
-                  instance_variable_set("@#{name}", value)
-                else
-                  raise ArgumentError, "unknown keyword: #{name}"
-                end
+                raise ArgumentError, "unknown keyword: #{name}" unless kwattrs.key?(name)
+
+                instance_variable_set("@#{name}", value)
               end
             end
           end
 
           attrs.each do |attr|
-            define_method attr do instance_variable_get("@#{attr}") end
+            define_method attr do
+              instance_variable_get("@#{attr}")
+            end
             private attr
           end
 

@@ -66,6 +66,7 @@ module Mandate
           # If call fails, succeeded! will never get called
           @__mandate_results.succeeded!(call)
         rescue AbortError
+          # Used for flow handling
         end
 
         @__mandate_results

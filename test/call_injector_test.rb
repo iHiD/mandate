@@ -1,6 +1,7 @@
 require "test_helper"
 
 class CallInjectorTest < Minitest::Test
+  # rubocop:disable Naming/MethodParameterName
   class Sumer
     include Mandate
 
@@ -88,6 +89,7 @@ class CallInjectorTest < Minitest::Test
       IAmNotDefined
     end
   end
+  # rubocop:enable Naming/MethodParameterName
 
   def test_call_works_properly
     assert_equal 15, Sumer.(10, 5)

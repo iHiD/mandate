@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "mandate/version"
 
 Gem::Specification.new do |spec|
+  spec.required_ruby_version = '>= 2.6.0'
   spec.name          = "mandate"
   spec.version       = Mandate::VERSION
   spec.authors       = ["Jeremy Walker"]
