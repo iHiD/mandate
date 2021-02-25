@@ -11,10 +11,10 @@ module Mandate
           # its type being :key, the we should pass the hash in in using the **kwords syntax.
           # This fixes a deprecation issue in Ruby 2.7.
           if args.last.is_a?(Hash) &&
-            :key == instance_method(:initialize).parameters.last&.first
-            new(*args[0..-2], **args[-1]).call
+             instance_method(:initialize).parameters.last&.first == :key
+            new(*args[0..-2], **args[-1]).()
           else
-            new(*args).call
+            new(*args).()
           end
         end
       end

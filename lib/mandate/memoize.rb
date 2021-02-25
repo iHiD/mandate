@@ -1,6 +1,5 @@
 module Mandate
   module Memoize
-
     # This method is called on the line before a
     # define statement. It puts mandate into memoizing mode
     def memoize

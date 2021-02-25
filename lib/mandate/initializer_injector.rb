@@ -24,7 +24,7 @@ module Mandate
               end
 
               kwargs.each do |name, value|
-                if kwattrs.keys.include?(name)
+                if kwattrs.key?(name)
                   instance_variable_set("@#{name}", value)
                 else
                   raise ArgumentError, "unknown keyword: #{name}"

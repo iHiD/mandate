@@ -23,15 +23,15 @@ module Mandate
       def succeeded?
         !!succeeded
       end
-      alias_method :success?, :succeeded?
+      alias success? succeeded?
 
-      def on_success(&block)
-        block.call(result) if succeeded?
+      def on_success
+        yield(result) if succeeded?
         self
       end
 
-      def on_failure(&block)
-        block.call(errors) unless succeeded?
+      def on_failure
+        yield(errors) unless succeeded?
         self
       end
 
