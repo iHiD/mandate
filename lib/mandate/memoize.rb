@@ -1,6 +1,5 @@
 module Mandate
   module Memoize
-
     # This method is called on the line before a
     # define statement. It puts mandate into memoizing mode
     def memoize
@@ -14,10 +13,10 @@ module Mandate
     def method_added(method_name)
       super
 
-      if instance_variable_defined?("@__mandate_memoizing") && @__mandate_memoizing
-        __mandate_memoize(method_name)
-        @__mandate_memoizing = false
-      end
+      return unless instance_variable_defined?("@__mandate_memoizing") && @__mandate_memoizing
+
+      __mandate_memoize(method_name)
+      @__mandate_memoizing = false
     end
 
     # Create an anonymous module that defines a method
@@ -48,11 +47,10 @@ module Mandate
             @__mandate_memoized_results[method_name] = super()
           end
         end
-        
+
         send(access_modifier, method_name) if access_modifier
       end
       prepend memoizer
     end
   end
 end
-

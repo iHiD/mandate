@@ -1,11 +1,12 @@
 require "test_helper"
 
 class CallInjectorTest < Minitest::Test
-
+  # rubocop:disable Naming/MethodParameterName
   class Sumer
     include Mandate
 
     attr_reader :foo, :bar
+
     def initialize(foo, bar)
       @foo = foo
       @bar = bar
@@ -19,8 +20,7 @@ class CallInjectorTest < Minitest::Test
   class OneSumer
     include Mandate
 
-    def initialize
-    end
+    def initialize; end
 
     def call
       1
@@ -31,13 +31,14 @@ class CallInjectorTest < Minitest::Test
     include Mandate
 
     attr_reader :a, :b
-    def initialize(a, b:1)
+
+    def initialize(a, b: 1)
       @a = a
       @b = b
     end
 
     def call
-      a+b
+      a + b
     end
   end
 
@@ -45,14 +46,15 @@ class CallInjectorTest < Minitest::Test
     include Mandate
 
     attr_reader :a, :b, :other
-    def initialize(a, *other, b:1)
+
+    def initialize(a, *other, b: 1)
       @a = a
       @b = b
       @other = (other || [])
     end
 
     def call
-      a+b+other.inject(:+).to_i
+      a + b + other.inject(:+).to_i
     end
   end
 
@@ -60,6 +62,7 @@ class CallInjectorTest < Minitest::Test
     include Mandate
 
     attr_reader :a, :b
+
     def initialize(a, b)
       @a = a
       @b = b
@@ -86,6 +89,7 @@ class CallInjectorTest < Minitest::Test
       IAmNotDefined
     end
   end
+  # rubocop:enable Naming/MethodParameterName
 
   def test_call_works_properly
     assert_equal 15, Sumer.(10, 5)
@@ -109,11 +113,11 @@ class CallInjectorTest < Minitest::Test
   end
 
   def test_hash_as_final_param
-    assert_equal "a b c", WeirdPrinter.("a", {b: "c"})
+    assert_equal "a b c", WeirdPrinter.("a", { b: "c" })
   end
 
   def test_hash_with_initialize_with
-    assert_equal "a b c", WeirdPrinterInitialized.("a", {b: "c"})
+    assert_equal "a b c", WeirdPrinterInitialized.("a", { b: "c" })
   end
 
   def test_empty_intitializer
