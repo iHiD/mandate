@@ -1,3 +1,3 @@
 module Mandate
-  VERSION = "0.4.0.beta.1"
+  VERSION = "1.0.0.beta.1"
 end

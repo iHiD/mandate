@@ -29,6 +29,15 @@ module Mandate
     # We then prepend this module so that its method
     # comes first in the method-lookup chain.
     def __mandate_memoize(method_name)
+      # Capture the access level of the method outside the module
+      # then set the method inside the module to have the same
+      # access later.
+      if private_instance_methods.include?(method_name)
+        access_modifier = :private
+      elsif protected_instance_methods.include?(method_name)
+        access_modifier = :protected
+      end
+
       memoizer = Module.new do
         define_method method_name do
           @__mandate_memoized_results ||= {}
@@ -39,6 +48,8 @@ module Mandate
             @__mandate_memoized_results[method_name] = super()
           end
         end
+        
+        send(access_modifier, method_name) if access_modifier
       end
       prepend memoizer
     end
