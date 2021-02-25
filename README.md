@@ -1,5 +1,6 @@
 # Mandate
-[![Build Status](https://travis-ci.org/ThalamusAI/mandate.svg?branch=master)](https://travis-ci.org/ThalamusAI/mandate)
+
+![Tests](https://github.com/iHiD/mandate/workflows/Tests/badge.svg)
 
 A simple command-pattern helper gem for Ruby.
 
