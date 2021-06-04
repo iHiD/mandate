@@ -10,12 +10,20 @@ module Mandate
           # If the last argument is a hash and the last param is a keyword params (signified by
           # its type being :key, the we should pass the hash in in using the **kwords syntax.
           # This fixes a deprecation issue in Ruby 2.7.
-          if args.last.is_a?(Hash) &&
-             instance_method(:initialize).parameters.last&.first == :key
-            new(*args[0..-2], **args[-1]).()
-          else
-            new(*args).()
+          with_notifications do
+            if args.last.is_a?(Hash) &&
+               instance_method(:initialize).parameters.last&.first == :key
+              new(*args[0..-2], **args[-1]).()
+            else
+              new(*args).()
+            end
           end
+        end
+
+        def with_notifications(&block)
+          return yield unless Mandate.use_notifications?
+
+          ActiveSupport::Notifications.instrument('call.mandate', command: self.name, &block)
         end
       end
     end
