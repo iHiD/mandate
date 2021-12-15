@@ -123,4 +123,23 @@ class CallInjectorTest < Minitest::Test
   def test_empty_intitializer
     assert_equal 1, OneSumer.()
   end
+
+  def test_notifications
+    Mandate.use_notifications!
+
+    events = []
+
+    ActiveSupport::Notifications.subscribe('call.mandate') do |*args|
+      events << ActiveSupport::Notifications::Event.new(*args)
+    end
+
+    assert_equal 1, OneSumer.()
+
+    assert_equal 1, events.size
+    event = events.first
+    assert_equal 'call.mandate', event.name
+    assert_equal({ command: "CallInjectorTest::OneSumer" }, event.payload)
+  ensure
+    Mandate::Config.instance.do_not_use_notifications!
+  end
 end
