@@ -16,7 +16,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@4726835508d9debb3220096c92d7bf6388485faa
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.1.0'
 
       - name: Install gems
         run: |
