@@ -93,8 +93,9 @@ class CallInjectorTest < Minitest::Test
 
   class WithKeyword
     include Mandate
-  
+
     attr_reader :foo, :bar, :baz
+
     def initialize(foo, bar, baz:)
       @foo = foo
       @bar = bar
