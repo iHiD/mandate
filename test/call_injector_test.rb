@@ -91,8 +91,27 @@ class CallInjectorTest < Minitest::Test
   end
   # rubocop:enable Naming/MethodParameterName
 
+  class WithKeyword
+    include Mandate
+  
+    attr_reader :foo, :bar, :baz
+    def initialize(foo, bar, baz:)
+      @foo = foo
+      @bar = bar
+      @baz = baz
+    end
+
+    def call
+      foo + bar + baz
+    end
+  end
+
   def test_call_works_properly
     assert_equal 15, Sumer.(10, 5)
+  end
+
+  def test_call_works_properly_with_keyword
+    assert_equal 9, WithKeyword.(3, 4, baz: 2)
   end
 
   def test_call_works_properly_with_bad_constant
