@@ -4,6 +4,8 @@
 
 A simple command-pattern helper gem for Ruby.
 
+**Note: As of 2.0.0, Mandate only supports Ruby 3.x. For Ruby 2.x, please use the 1.0.0 release.**
+
 ## Installation
 
 Add this line to your application's Gemfile:
