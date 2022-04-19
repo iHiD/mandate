@@ -14,9 +14,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@42817531497ae2ef0168458f709e451109306bd5
+        uses: ruby/setup-ruby@4726835508d9debb3220096c92d7bf6388485faa
         with:
-          ruby-version: 2.6.6
+          ruby-version: '3.1.0'
 
       - name: Install gems
         run: |

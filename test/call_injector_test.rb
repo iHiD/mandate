@@ -42,6 +42,22 @@ class CallInjectorTest < Minitest::Test
     end
   end
 
+  class SplatKwargsSummerCombined
+    include Mandate
+
+    attr_reader :a, :b, :other
+
+    def initialize(a, b: 1, **other)
+      @a = a
+      @b = b
+      @other = other
+    end
+
+    def call
+      a + b + other.values.inject(:+).to_i
+    end
+  end
+
   class SplatKwargsSummer
     include Mandate
 
@@ -110,6 +126,12 @@ class CallInjectorTest < Minitest::Test
     assert_equal 2, SplatKwargsSummer.(1)
     assert_equal 3, SplatKwargsSummer.(1, b: 2)
     assert_equal 15, SplatKwargsSummer.(1, 2, 4, b: 8)
+  end
+
+  def test_call_works_with_combined_splat_kwargs
+    assert_equal 2, SplatKwargsSummerCombined.(1)
+    assert_equal 3, SplatKwargsSummerCombined.(1, b: 2)
+    assert_equal 15, SplatKwargsSummerCombined.(1, b: 8, c: 4, d: 2)
   end
 
   def test_hash_as_final_param

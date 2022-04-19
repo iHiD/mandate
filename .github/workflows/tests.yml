@@ -15,13 +15,13 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-        ruby-version: [2.6, 2.7, 3.0]
+        ruby-version: ['3.0', '3.1']
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@42817531497ae2ef0168458f709e451109306bd5
+        uses: ruby/setup-ruby@4726835508d9debb3220096c92d7bf6388485faa
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
