@@ -13,7 +13,19 @@ class InitializerInjectorTest < Minitest::Test
 
   class KeywordStorer
     include Mandate
-    initialize_with :foo, bar: "default"
+    initialize_with :foo, optional: "default", compulsary: Mandate::NO_DEFAULT
+  end
+
+  class BlockRunner
+    include Mandate
+    initialize_with :var do
+      var.test_i_get_run
+      other_method
+    end
+
+    def other_method
+      var.test_i_also_get_run
+    end
   end
 
   def test_initializes_properly_without_args
@@ -30,17 +42,38 @@ class InitializerInjectorTest < Minitest::Test
 
   def test_initializes_properly_with_keyword_args
     foo = "fooooo"
-    bar = "baaarrrr"
-    storer = KeywordStorer.new(foo, bar: bar)
+    optional = mock
+    compulsary = mock
+
+    storer = KeywordStorer.new(foo, optional: optional, compulsary: compulsary)
+
     assert_equal foo, storer.send(:foo)
-    assert_equal bar, storer.send(:bar)
+    assert_equal optional, storer.send(:optional)
+    assert_equal compulsary, storer.send(:compulsary)
   end
 
-  def test_initializes_properly_with_a_missing_keyword_arg
+  def test_initializes_properly_with_a_missing_optional_keyword_arg
     foo = "fooooo"
-    storer = KeywordStorer.new(foo)
+    compulsary = mock
+    storer = KeywordStorer.new(foo, compulsary: compulsary)
     assert_equal foo, storer.send(:foo)
-    assert_equal "default", storer.send(:bar)
+    assert_equal "default", storer.send(:optional)
+  end
+
+  def test_explodes_with_a_missing_compulsary_keyword_arg
+    foo = "fooooo"
+
+    assert_raises ArgumentError do
+      KeywordStorer.new(foo)
+    end
+  end
+
+  def test_initializes_with_a_block
+    foo = mock
+    foo.expects(:test_i_get_run).once
+    foo.expects(:test_i_also_get_run).once
+
+    BlockRunner.new(foo)
   end
 
   def test_raises_with_wrong_amount_of_args
