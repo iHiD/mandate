@@ -1,34 +1,35 @@
+require 'securerandom'
+
 module Mandate
+  NO_DEFAULT = SecureRandom.uuid
+
   module InitializerInjector
     def self.extended(base)
       class << base
-        def initialize_with(*attrs, **kwattrs)
-          if kwattrs.empty?
-            define_method :initialize do |*args|
-              unless args.length == attrs.length
-                raise ArgumentError, "wrong number of arguments (given #{args.length}, expected #{attrs.length})"
-              end
-
-              attrs.zip(args).each do |attr, arg|
-                instance_variable_set("@#{attr}", arg)
-              end
+        def initialize_with(*attrs, **kwattrs, &block)
+          define_method :initialize do |*args, **kwargs|
+            unless args.length == attrs.length
+              raise ArgumentError, "wrong number of arguments (given #{args.length}, expected #{attrs.length})"
             end
-          else
-            define_method :initialize do |*args, **kwargs|
-              unless args.length == attrs.length
-                raise ArgumentError, "wrong number of arguments (given #{args.length}, expected #{attrs.length})"
-              end
 
-              attrs.zip(args).each do |attr, arg|
-                instance_variable_set("@#{attr}", arg)
-              end
-
-              kwargs.each do |name, value|
-                raise ArgumentError, "unknown keyword: #{name}" unless kwattrs.key?(name)
-
-                instance_variable_set("@#{name}", value)
-              end
+            attrs.zip(args).each do |attr, arg|
+              instance_variable_set("@#{attr}", arg)
             end
+
+            kwargs.each do |name, value|
+              raise ArgumentError, "unknown keyword: #{name}" unless kwattrs.key?(name)
+
+              instance_variable_set("@#{name}", value)
+            end
+
+            kwattrs.each do |key, value|
+              next unless value == NO_DEFAULT
+              next if kwargs.key?(key)
+
+              raise ArgumentError, "Keyword argument was not specified: #{key}"
+            end
+
+            instance_eval(&block) if block
           end
 
           attrs.each do |attr|

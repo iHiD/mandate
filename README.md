@@ -28,7 +28,7 @@ Or install it yourself as:
 class Multiplies
   include Mandate
 
-  initialize_with :number_1, :number_2
+  initialize_with :number_1, number_2: 0
 
   def call
     do_the_maths
@@ -50,17 +50,38 @@ Multiplies.(20, 3)
 ### `initialize_with`
 
 The `initialize_with` method creates an initializer and private attr_readers for the specified variables.
+Keyword arguments can be expressed normally, but arguments without default values must be specified with the value `Mandate::NO_DEFAULT`.
+The call also takes a block, which is run after the variables are set.
 
-For example `initialize_with :foo, :bar` is the equivalent of:
+For example, this...
 
 ```ruby
-def initialize(foo, bar)
-  @foo = foo
-  @bar = bar
-end
+MODELS = ...
 
-private
-attr_reader :foo, :bar
+class Car
+  initialize_with :model, color: "blue", owner: Mandate::NO_DEFAULT do
+    raise unless MODELS[model].colors.include?(color)
+  end
+end
+```
+
+...is the equivalent of...
+
+```ruby
+MODELS = ...
+
+class Foobar
+  def initialize(model, color: "blue", owner: )
+    @model = model
+    @color = color
+    @owner = owner
+
+    raise unless MODELS[model].colors.include?(color)
+  end
+
+  private
+  attr_reader :model, :color, :owner
+end
 ```
 
 ### Using on_success/on_failure callbacks
