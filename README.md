@@ -51,6 +51,7 @@ Multiplies.(20, 3)
 
 The `initialize_with` method creates an initializer and private attr_readers for the specified variables.
 Keyword arguments can be expressed normally, but arguments without default values must be specified with the value `Mandate::NO_DEFAULT`.
+You may also use the `Mandate::KWARGS` param to capture any params that aren't explicitely set.
 The call also takes a block, which is run after the variables are set.
 
 For example, this...
@@ -59,7 +60,7 @@ For example, this...
 MODELS = ...
 
 class Car
-  initialize_with :model, color: "blue", owner: Mandate::NO_DEFAULT do
+  initialize_with :model, color: "blue", owner: Mandate::NO_DEFAULT, params: Mandate::KWARGS do
     raise unless MODELS[model].colors.include?(color)
   end
 end
@@ -71,10 +72,11 @@ end
 MODELS = ...
 
 class Foobar
-  def initialize(model, color: "blue", owner: )
+  def initialize(model, color: "blue", owner:, params = {})
     @model = model
     @color = color
     @owner = owner
+    @params = params
 
     raise unless MODELS[model].colors.include?(color)
   end

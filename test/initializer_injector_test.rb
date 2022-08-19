@@ -16,6 +16,11 @@ class InitializerInjectorTest < Minitest::Test
     initialize_with :foo, optional: "default", compulsary: Mandate::NO_DEFAULT
   end
 
+  class KeywordWildcardCapturer
+    include Mandate
+    initialize_with :foo, something: "default", others: Mandate::KWARGS
+  end
+
   class BlockRunner
     include Mandate
     initialize_with :var do
@@ -58,6 +63,18 @@ class InitializerInjectorTest < Minitest::Test
     storer = KeywordStorer.new(foo, compulsary: compulsary)
     assert_equal foo, storer.send(:foo)
     assert_equal "default", storer.send(:optional)
+  end
+
+  def test_initializes_properly_with_kwargs_param
+    foo = "fooooo"
+    something = mock
+    random = mock
+    another_rand = mock
+
+    storer = KeywordWildcardCapturer.new(foo, something: something, random: random, another_rand: another_rand)
+    assert_equal foo, storer.send(:foo)
+    assert_equal something, storer.send(:something)
+    assert_equal({ random: random, another_rand: another_rand }, storer.send(:others))
   end
 
   def test_explodes_with_a_missing_compulsary_keyword_arg
