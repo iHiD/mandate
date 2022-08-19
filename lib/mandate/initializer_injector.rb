@@ -2,12 +2,20 @@ require 'securerandom'
 
 module Mandate
   NO_DEFAULT = SecureRandom.uuid
+  CAPTURE_KWARGS_ATTR = :attributes
 
   module InitializerInjector
     def self.extended(base)
       class << base
         def initialize_with(*attrs, **kwattrs, &block)
           define_method :initialize do |*args, **kwargs|
+            # If the last attribute is :attributes, store the kwargs array
+            # instead of its individual keyword values
+            if attrs.last == CAPTURE_KWARGS_ATTR
+              args << kwargs
+              kwargs = []
+            end
+
             unless args.length == attrs.length
               raise ArgumentError, "wrong number of arguments (given #{args.length}, expected #{attrs.length})"
             end

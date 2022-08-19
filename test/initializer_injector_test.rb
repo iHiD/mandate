@@ -11,6 +11,11 @@ class InitializerInjectorTest < Minitest::Test
     initialize_with :foo, :bar
   end
 
+  class AttributesStorer
+    include Mandate
+    initialize_with :foo, :bar, :attributes
+  end
+
   class KeywordStorer
     include Mandate
     initialize_with :foo, optional: "default", compulsary: Mandate::NO_DEFAULT
@@ -38,6 +43,13 @@ class InitializerInjectorTest < Minitest::Test
     storer = ArgumentativeStorer.new(foo, bar)
     assert_equal foo, storer.send(:foo)
     assert_equal bar, storer.send(:bar)
+  end
+
+  def test_initializes_properly_with_attributes
+    foo = "fooooo"
+    bar = "baaarrrr"
+    attrs = AttributesStorer.new(foo, bar, add: 1, to: 2)
+    assert_equal ({ add: 1, to: 2 }), attrs.send(:attributes)
   end
 
   def test_initializes_properly_with_keyword_args
