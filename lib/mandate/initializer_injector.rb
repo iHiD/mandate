@@ -2,11 +2,14 @@ require 'securerandom'
 
 module Mandate
   NO_DEFAULT = SecureRandom.uuid
+  KWARGS = SecureRandom.uuid
 
   module InitializerInjector
     def self.extended(base)
       class << base
         def initialize_with(*attrs, **kwattrs, &block)
+          kwarg_capture_key = (kwattrs.find(-> { [] }) { |_name, value| value == KWARGS }).first
+
           define_method :initialize do |*args, **kwargs|
             unless args.length == attrs.length
               raise ArgumentError, "wrong number of arguments (given #{args.length}, expected #{attrs.length})"
@@ -16,10 +19,15 @@ module Mandate
               instance_variable_set("@#{attr}", arg)
             end
 
+            instance_variable_set("@#{kwarg_capture_key}", {}) if kwarg_capture_key
             kwargs.each do |name, value|
-              raise ArgumentError, "unknown keyword: #{name}" unless kwattrs.key?(name)
-
-              instance_variable_set("@#{name}", value)
+              if kwattrs.key?(name)
+                instance_variable_set("@#{name}", value)
+              elsif kwarg_capture_key
+                instance_variable_get("@#{kwarg_capture_key}")[name] = value
+              else
+                raise ArgumentError, "unknown keyword: #{name}"
+              end
             end
 
             kwattrs.each do |key, value|
